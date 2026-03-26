@@ -1,0 +1,92 @@
+/*******************************************************************************
+ * @file        osal_baremetal.c.example
+ * @brief       Bare-metal OSAL template
+ *
+ * @details
+ * Copy this file to your project:
+ *   port/osal/osal_baremetal.c
+ *
+ * Then update the implementation as per your platform.
+ ******************************************************************************/
+
+#include "osal.h"
+
+/* Optional: include your MCU headers */
+// #include "stm32f4xx_hal.h"
+
+/*******************************************************************************
+ * Static functions
+ *******************************************************************************/
+
+static osal_err_t bm_init(osal_t *osal)
+{
+    (void)osal;
+    return OSAL_OK;
+}
+
+static osal_err_t bm_deinit(osal_t *osal)
+{
+    (void)osal;
+    return OSAL_OK;
+}
+
+static osal_err_t bm_lock(void)
+{
+    /* Disable interrupts */
+    __disable_irq();
+    return OSAL_OK;
+}
+
+static osal_err_t bm_unlock(void)
+{
+    /* Enable interrupts */
+    __enable_irq();
+    return OSAL_OK;
+}
+
+static bool bm_is_isr(void)
+{
+    /* Cortex-M specific */
+    return (__get_IPSR() != 0U);
+}
+
+static uint32_t bm_timestamp(void)
+{
+    /* Replace with your tick source */
+    return 0;
+}
+
+static void bm_delay_ms(uint32_t ms)
+{
+    /* Replace with platform delay */
+    (void)ms;
+}
+
+static void bm_delay_ns(uint32_t ns)
+{
+    /* Optional: simple loop */
+    (void)ns;
+}
+
+/*******************************************************************************
+ * Exported ops
+ *******************************************************************************/
+
+const osal_ops_t osal_baremetal_ops =
+{
+    .init = bm_init,
+    .deinit = bm_deinit,
+    .lock = bm_lock,
+    .unlock = bm_unlock,
+    .is_isr = bm_is_isr,
+    .get_timestamp = bm_timestamp,
+    .delay_ms = bm_delay_ms,
+    .delay_ns = bm_delay_ns,
+};
+
+
+const osal_ops_t *get_osal_baremetal_ops(void)
+{
+    return &osal_baremetal_ops;
+}
+/****************************** End of file ***********************************/
