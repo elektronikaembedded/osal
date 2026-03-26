@@ -66,7 +66,7 @@ src/osal.c
 port/osal/osal_<platform>.c
 
 ### 🧩 Usage Example
-
+```c
 #include "osal.h"
 
 static osal_t osal;
@@ -77,7 +77,9 @@ void app_init(void)
 
     osal.ops->delay_ms(10);
 }
+```
 ### 🧠 API Overview
+```c
 Initialize
 osal_init(&osal, &osal_ops);
 Delay
@@ -90,6 +92,7 @@ if (osal.ops->is_isr())
 {
     // ISR context
 }
+```
 ### ⚙️ Design Notes
 The OSAL uses a function pointer table (osal_ops_t)
 Each platform provides its own implementation
