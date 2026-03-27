@@ -19,46 +19,46 @@
  * Static functions
  *******************************************************************************/
 
-static osal_err_t fr_init(osal_t *osal)
+static osal_err_t osal_fn_init(osal_t *osal)
 {
     (void)osal;
     return OSAL_OK;
 }
 
-static osal_err_t fr_deinit(osal_t *osal)
+static osal_err_t osal_fn_deinit(osal_t *osal)
 {
     (void)osal;
     return OSAL_OK;
 }
 
-static osal_err_t fr_lock(void)
+static osal_err_t osal_lock(void)
 {
     taskENTER_CRITICAL();
     return OSAL_OK;
 }
 
-static osal_err_t fr_unlock(void)
+static osal_err_t osal_unlock(void)
 {
     taskEXIT_CRITICAL();
     return OSAL_OK;
 }
 
-static bool fr_is_isr(void)
+static bool osal_is_isr(void)
 {
     return (__get_IPSR() != 0U);
 }
 
-static uint32_t fr_timestamp(void)
+static uint32_t osal_timestamp(void)
 {
     return xTaskGetTickCount();
 }
 
-static void fr_delay_ms(uint32_t ms)
+static void osal_delay_ms(uint32_t ms)
 {
     vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
-static void fr_delay_ns(uint32_t ns)
+static void osal_delay_ns(uint32_t ns)
 {
     /* Not supported in FreeRTOS */
     (void)ns;
@@ -70,19 +70,19 @@ static void fr_delay_ns(uint32_t ns)
 
 const osal_ops_t osal_freertos_ops =
 {
-    .init = fr_init,
-    .deinit = fr_deinit,
-    .lock = fr_lock,
-    .unlock = fr_unlock,
-    .is_isr = fr_is_isr,
-    .get_timestamp = fr_timestamp,
-    .delay_ms = fr_delay_ms,
-    .delay_ns = fr_delay_ns,
+    .init = osal_fn_init,
+    .deinit = osal_fn_deinit,
+    .lock = osal_lock,
+    .unlock = osal_unlock,
+    .is_isr = osal_is_isr,
+    .get_timestamp = osal_timestamp,
+    .delay_ms = osal_delay_ms,
+    .delay_ns = osal_delay_ns,
 };
 
 
-const osal_ops_t *get_osal_freertos_ops(void)
+const osal_ops_t *get_osal_ops(void)
 {
-    return &osal_freertos_ops;
+    return &osal_baremetal_ops;
 }
 /****************************** End of file ***********************************/

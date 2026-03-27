@@ -54,6 +54,7 @@ typedef struct
 
     bool (*is_isr)(void);
     uint32_t (*get_timestamp)(void);
+    const char *(*get_thread_name)(void);
 
     void (*delay_ms)(uint32_t ms);
     void (*delay_ns)(uint32_t ns);
@@ -82,14 +83,9 @@ osal_err_t osal_init(osal_t *osal, const osal_ops_t *ops);
 osal_err_t osal_deinit(osal_t *osal);
 
 /**
- * @brief Get osal frertos opts
+ * @brief Get osal opts
  */
-const osal_ops_t *get_osal_freertos_ops(void);
-
-/**
- * @brief Get osal baremetal opts
- */
-const osal_ops_t *get_osal_baremetal_ops(void);
+const osal_ops_t *get_osal_ops(void);
 
 #ifdef __cplusplus
 }
