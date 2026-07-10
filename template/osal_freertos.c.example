@@ -33,13 +33,11 @@ static osal_err_t osal_fn_deinit(osal_t *osal)
 
 static osal_err_t osal_lock(void)
 {
-    taskENTER_CRITICAL();
     return OSAL_OK;
 }
 
 static osal_err_t osal_unlock(void)
 {
-    taskEXIT_CRITICAL();
     return OSAL_OK;
 }
 
@@ -52,6 +50,35 @@ static uint32_t osal_timestamp(void)
 {
     return xTaskGetTickCount();
 }
+
+const char *osal_thread_name(void)
+{
+    TaskHandle_t task;
+    const char *thread_name;
+
+    /* Called from interrupt context */
+    if (__get_IPSR() != 0U)
+    {
+        return "ISR";
+    }
+
+    task = xTaskGetCurrentTaskHandle();
+
+    if (task == NULL)
+    {
+        return "MAIN";
+    }
+
+    thread_name = pcTaskGetName(task);
+
+    if (thread_name == NULL)
+    {
+        return "UNKNOWN";
+    }
+
+    return thread_name;
+} /* End of this function */
+
 
 static void osal_delay_ms(uint32_t ms)
 {
@@ -76,13 +103,14 @@ const osal_ops_t osal_freertos_ops =
     .unlock = osal_unlock,
     .is_isr = osal_is_isr,
     .get_timestamp = osal_timestamp,
+    .get_thread_name = osal_thread_name,
     .delay_ms = osal_delay_ms,
-    .delay_ns = osal_delay_ns,
+    .delay_ns = osal_delay_ns
 };
 
 
 const osal_ops_t *get_osal_ops(void)
 {
-    return &osal_baremetal_ops;
+    return &osal_freertos_ops;
 }
 /****************************** End of file ***********************************/
